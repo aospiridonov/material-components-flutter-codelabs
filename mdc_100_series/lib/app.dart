@@ -12,28 +12,47 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'backdrop.dart';
-import 'model/product.dart';
 import 'colors.dart';
 import 'home.dart';
 import 'login.dart';
+import 'category_menu_page.dart';
+import 'model/product.dart' as product;
 import 'supplemental/cut_corners_border.dart';
 
 // TODO: Convert ShrineApp to stateful widget (104)
-class ShrineApp extends StatelessWidget {
+class ShrineApp extends StatefulWidget {
+  @override
+  _ShrineAppState createState() => _ShrineAppState();
+}
+
+class _ShrineAppState extends State<ShrineApp> {
+  var _currentCategory = product.Category.all;
+
+  void _onCategoryTap(product.Category category) {
+    setState(() {
+      _currentCategory = category;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Shrine',
       // TODO: Change home: to a Backdrop with a HomePage frontLayer (104)
       home: Backdrop(
-        currentCategory: Category.all,
+        // TODO: Make currentCategory field take _currentCategory (104)
+        currentCategory: _currentCategory,
         // TODO: Pass _currentCategory for frontLayer (104)
-        frontLayer: HomePage(),
+        frontLayer: HomePage(category: _currentCategory),
         // TODO: Change backLayer field value to CategoryMenuPage (104)
-        backLayer: Container(color: kShrinePink100),
+        backLayer: CategoryMenyPage(
+          currentCategory: _currentCategory,
+          onCategoryTap: _onCategoryTap,
+        ),
         frontTitle: Text('SHRINE'),
         backTitle: Text('MENU'),
       ),
